@@ -5,6 +5,17 @@ resource "aws_instance" "controller" {
 
   user_data = file("user-data.sh")
 
+  provisioner "file" {
+  source      = "ansible.pem"
+  destination = "/home/ubuntu/ansible.pem"
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    host     = aws_eip.controller.public_ip
+    private_key = file("ansible.pem")
+  }
+}
+
   network_interface {
     network_interface_id = aws_network_interface.controller.id
     device_index = 0
@@ -19,7 +30,7 @@ resource "aws_eip" "controller" {
   network_interface = aws_network_interface.controller.id
   vpc      = true
   associate_with_private_ip = "10.0.0.6"
-  depends_on                = [aws_internet_gateway.gw, aws_instance.controller]
+  depends_on                = [aws_internet_gateway.gw]
 }
 
 resource "aws_network_interface" "controller" {
