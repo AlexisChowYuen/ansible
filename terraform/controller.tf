@@ -16,8 +16,10 @@ resource "aws_instance" "controller" {
 }
 
 resource "aws_eip" "controller" {
-  instance = aws_instance.controller.id
+  network_interface = aws_network_interface.controller.id
   vpc      = true
+  associate_with_private_ip = "10.0.0.6"
+  depends_on                = [aws_internet_gateway.gw, aws_instance.controller]
 }
 
 resource "aws_network_interface" "controller" {

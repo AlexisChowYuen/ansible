@@ -16,8 +16,10 @@ resource "aws_instance" "target1" {
 }
 
 resource "aws_eip" "tg1" {
-  instance = aws_instance.target1.id
+  network_interface = aws_network_interface.target1.id
   vpc      = true
+  associate_with_private_ip = "10.0.0.7"
+  depends_on                = [aws_internet_gateway.gw, aws_instance.target1]
 }
 
 resource "aws_network_interface" "target1" {
