@@ -1,0 +1,7 @@
+db_and_webapp_server1 ansible_host=10.0.0.7 ansible_connection=ssh ansible_ssh_private_key_file=~/ansible.pem ansible_user=ubuntu
+db_and_webapp_server2 ansible_host=10.0.0.8 ansible_connection=ssh ansible_ssh_private_key_file=~/ansible.pem ansible_user=ubuntu
+localhost ansible_connection=local
+
+[db_and_webapp]
+db_and_webapp_server1
+db_and_webapp_server2

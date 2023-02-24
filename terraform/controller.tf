@@ -6,15 +6,27 @@ resource "aws_instance" "controller" {
   user_data = file("user-data.sh")
 
   provisioner "file" {
-  source      = "ansible.pem"
-  destination = "/home/ubuntu/ansible.pem"
-  connection {
-    type     = "ssh"
-    user     = "ubuntu"
-    host     = aws_eip.controller.public_ip
-    private_key = file("ansible.pem")
+    source      = "ansible/"
+    destination = "/home/ubuntu"
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = aws_eip.controller.public_ip
+      private_key = file("ansible/ansible.pem")
+    }
   }
-}
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 /home/ubuntu/ansible.pem"
+    ]
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = aws_eip.controller.public_ip
+      private_key = file("ansible/ansible.pem")
+    }
+  }
 
   network_interface {
     network_interface_id = aws_network_interface.controller.id
