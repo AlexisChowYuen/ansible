@@ -2,7 +2,6 @@
   hosts: db_and_webapp
   become : true
   tasks:
-
   - name: Install all python required dependencies
     apt: name={{ item }} state=present
     with_items:
@@ -13,43 +12,6 @@
     - python3-pip
     - python3-mysqldb
 
-  - name: Install all sql required dependencies
-    apt: name={{ item }} state=present
-    with_items:
-    - mysql-server
-    - mysql-client
+  - include: tasks/deploy_db.yml
+  - include: tasks/deploy_web.yml
 
-  - name: Start database service
-    service:
-      name: mysql
-      state: started
-      enabled: yes
-
-  - name: Create Application Database
-    mysql_db:
-      name: employee_db
-      state: present
-
-  - name: Create database user
-    mysql_user:
-      name: db_user
-      password: Passw0rd
-      priv: '*.*:ALL'
-      state: present
-      host: '%'
-
-  - name: Install Python Flask dependency
-    pip:
-      name: '{{ item }}'
-      state: present
-    with_items:
-    - flask
-    - flask-mysql
-
-  - name: Copy source code 
-    copy:
-      src: app.py
-      dest: /opt/app.py
-
-  - name: Start Web server
-    shell: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 &
