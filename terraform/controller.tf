@@ -6,13 +6,13 @@ resource "aws_instance" "controller" {
   user_data = file("user-data.sh")
 
   provisioner "file" {
-    source      = "ansible/"
+    source      = "../ansible/"
     destination = "/home/ubuntu"
     connection {
       type     = "ssh"
       user     = "ubuntu"
       host     = aws_eip.controller.public_ip
-      private_key = file("ansible/ansible.pem")
+      private_key = file("../ansible/ansible.pem")
     }
   }
 
@@ -24,7 +24,7 @@ resource "aws_instance" "controller" {
       type     = "ssh"
       user     = "ubuntu"
       host     = aws_eip.controller.public_ip
-      private_key = file("ansible/ansible.pem")
+      private_key = file("../ansible/ansible.pem")
     }
   }
 
